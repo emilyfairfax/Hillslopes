@@ -2,7 +2,7 @@
 Models for various hillslope diffusion scenarios
 
 General Notes:
-<p)1) All scenarios make use of the HbedrockFunction to define the initial topography, so ensure that it is downloaded to the same folder as the script files</p>
+<p>1) All scenarios make use of the HbedrockFunction to define the initial topography, so ensure that it is downloaded to the same folder as the script files</p>
 <p>2) The parameters used (such as dx, dt, k, etc) are very sensitive and changing them even slightly sometimes makes the code blow up. At this point in time I have not figured out a way to make the code less sensitive to small changes in parameters.</p>
 
 File Navigation:

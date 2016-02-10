@@ -26,7 +26,9 @@ p = 100;%period of triangle wave topography, equal to amp for one wave
     tmax = 40*10^6;% maximum time to run the code in years
     t = 0:dt:tmax;% set up the time array
     imax = length(t);% define imax for time loops    
-
+    nplots = 100; % number of plots
+    tplot = tmax/nplots; % interval between plots
+    
     %Space
     dx = 1;   % x spacing (horizontal distance)
     xmax = p/2; % maximum x position
@@ -63,50 +65,52 @@ for i = 1:imax
         dhint(1:N-2) = (1/rhosoil)*(diff(Q(1:N-1))./dx).*dt; %figure out the net flux in each box
         dh(1:N) = [(1/rhosoil)*(Q(1))./dx.*dt dhint (1/rhosoil)*(-Q(N-1))./dx.*dt]; %pile up the sand at the boundaries
         H(1:N) = H(1:N) + dh(1:N); %update the soil thickness
-
+       
         
     %Plot the Results Each Time Step
-    %plots are made using subplot with position commands        
-    figure(1)
-    clf;
-    subplot('position',[.1 .5 .8 .45]);
-    plot(x,initialcondition,'x')
-    hold all
-%     plot(x,Hbedrock,'g')
-    plot(x,H,'r')
-   
-    %Color the sand beige
-    uu = [x,x];        % repeat x values
-    rr = [H,bottomline];   % vector of upper & lower boundaries
-    fill(uu,rr,[.95,.95,.93]) %fill the polygon created
-    
+    %plots are made using subplot with position commands   
+    if (rem(t(i),tplot)==0)
+        figure(1)
+        clf;
+        subplot('position',[.1 .5 .8 .45]);
+        plot(x,initialcondition,'x')
+        hold all
+        %plot(x,Hbedrock,'g')
+        plot(x,H,'r')
 
-    %Plot formatting
-    title('Profile Evolution');
-    xlabel('distance along profile,m');
-    ylabel('elevation,m');
-    set(gca,'fontsize',12,'fontname','arial')
-    legend('Initial Condition')
-    ht=text(3,40,['  ',num2str(round(t(i)/1000000)), ' yr  '],'fontsize',18); %print time in animation
-    axis([0 xmax 0 amp+2])
-    
-    %Subplot of flux
-    subplot('position',[.1 .1 .8 .1]);
-    plot(xhalfs,abs(Q),'b')
-    title('Flux with time');
-    xlabel('distance along profile,m');
-    ylabel('flux,m^2');
-    axis([0 xmax 0 max(Q)])
-    hold all;
-    
-    %Subplot of sand thickness
-    subplot('position',[.1 .3 .8 .1])
-    plot(x,H,'m')
-    title('Sand Thickness');
-    xlabel('distance along profile,m');
-    ylabel('sand thickness, m');
-    axis([0 xmax 0 50])
-    
-    pause(0.02)
-    hold off
+        %Color the sand beige
+        uu = [x,x];        % repeat x values
+        rr = [H,bottomline];   % vector of upper & lower boundaries
+        fill(uu,rr,[.95,.95,.93]) %fill the polygon created
+
+
+        %Plot formatting
+        title('Profile Evolution');
+        xlabel('distance along profile,m');
+        ylabel('elevation,m');
+        set(gca,'fontsize',12,'fontname','arial')
+        legend('Initial Condition')
+        ht=text(3,40,['  ',num2str(round(t(i)/1000000)), ' yr  '],'fontsize',18); %print time in animation
+        axis([0 xmax 0 amp+2])
+
+        %Subplot of flux
+        subplot('position',[.1 .1 .8 .1]);
+        plot(xhalfs,abs(Q),'b')
+        title('Flux with time');
+        xlabel('distance along profile,m');
+        ylabel('flux,m^2');
+        axis([0 xmax 0 2*k])
+        hold all;
+
+        %Subplot of sand thickness
+        subplot('position',[.1 .3 .8 .1])
+        plot(x,H,'m')
+        title('Sand Thickness');
+        xlabel('distance along profile,m');
+        ylabel('sand thickness, m');
+        axis([0 xmax 0 50])
+
+        pause(0.02)
+        hold off
+    end
 end
